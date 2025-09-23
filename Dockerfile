@@ -1,30 +1,23 @@
-# ---- Build Stage ----
-FROM node:18-alpine AS build
+# Use an official Node.js runtime as a parent image
+FROM node:18-alpine
 
+# Set the working directory in the container
 WORKDIR /usr/src/app
 
-# Install all deps (including dev) for build
-COPY package*.json ./
-RUN npm install --force
-
-COPY . .
-
-# Run the build
-RUN npm run build
-
-
-# ---- Production Stage ----
-FROM node:18-alpine AS production
-
-WORKDIR /usr/src/app
-
-# Copy only package files and install prod deps
+# Install app dependencies
 COPY package*.json ./
 RUN npm install --force --omit=dev
 
-# Copy built files from build stage
-COPY --from=build /usr/src/app/dist ./dist
+RUN npm install tailwindcss --save --legacy-peer-deps
 
+
+# Bundle app source
+COPY . .
+
+# Build the Next.js app for production
+RUN npm run build 
+# Expose port 3000
 EXPOSE 3000
 
-CMD ["npm", "run", "start"]
+# Start the application
+CMD ["npx", "vite", "preview", "--port", "3000", "--host", "0.0.0.0"]
