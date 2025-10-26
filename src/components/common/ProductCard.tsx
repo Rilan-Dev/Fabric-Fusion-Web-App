@@ -17,8 +17,9 @@ export function ProductCard({
   showQuickAdd = true,
   onAddToCart,
   onToggleWishlist,
+  onWishlistToggle,
   className 
-}: ProductCardProps & { className?: string }) {
+}: ProductCardProps & { className?: string; onWishlistToggle?: () => void }) {
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
   
@@ -39,7 +40,9 @@ export function ProductCard({
   };
 
   const handleToggleWishlist = () => {
-    if (onToggleWishlist) {
+    if (onWishlistToggle) {
+      onWishlistToggle();
+    } else if (onToggleWishlist) {
       onToggleWishlist(product.id);
     } else {
       toggleWishlistMutation.mutate({ productId: product.id, isInWishlist: isWishlisted });

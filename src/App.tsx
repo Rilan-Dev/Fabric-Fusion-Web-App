@@ -19,6 +19,12 @@ const AccountPage = lazy(() => import("./pages/AccountPage"));
 const AdminPage = lazy(() => import("./pages/AdminPage"));
 const ShowroomPage = lazy(() => import("./pages/ShowroomPage"));
 const AuthPage = lazy(() => import("./pages/AuthPage"));
+const WomenPage = lazy(() => import("./pages/WomenPage"));
+const MenPage = lazy(() => import("./pages/MenPage"));
+const KidsPage = lazy(() => import("./pages/KidsPage"));
+const HomePage = lazy(() => import("./pages/HomePage"));
+const SubCategoryPage = lazy(() => import("./pages/SubCategoryPage"));
+const WishlistPage = lazy(() => import("./pages/WishlistPage"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -49,10 +55,18 @@ const App = () => (
                 <Routes>
                   <Route path="/" element={<Index />} />
                   <Route path="/auth" element={<AuthPage />} />
+                  <Route path="/women" element={<WomenPage />} />
+                  <Route path="/women/:category" element={<SubCategoryPage />} />
+                  <Route path="/men" element={<MenPage />} />
+                  <Route path="/men/:category" element={<SubCategoryPage />} />
+                  <Route path="/kids" element={<KidsPage />} />
+                  <Route path="/kids/:category" element={<SubCategoryPage />} />
+                  <Route path="/home-textiles" element={<HomePage />} />
                   <Route path="/category/:slug" element={<CategoryPage />} />
                   <Route path="/category/:parent/:slug" element={<CategoryPage />} />
                   <Route path="/category/:grandparent/:parent/:slug" element={<CategoryPage />} />
                   <Route path="/product/:slug" element={<ProductPage />} />
+                  <Route path="/wishlist" element={<WishlistPage />} />
                   <Route path="/cart" element={<CartPage />} />
                   <Route path="/checkout" element={<CheckoutPage />} />
                   <Route path="/account" element={<AccountPage />} />

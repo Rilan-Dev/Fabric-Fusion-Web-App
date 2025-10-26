@@ -11,6 +11,7 @@ interface CategoryTileProps {
   category: Category;
   size?: 'small' | 'medium' | 'large';
   showProductCount?: boolean;
+  onClick?: () => void;
   className?: string;
 }
 
@@ -18,8 +19,15 @@ export function CategoryTile({
   category, 
   size = 'medium', 
   showProductCount = true,
+  onClick,
   className 
 }: CategoryTileProps) {
+  const handleClick = (e: React.MouseEvent) => {
+    if (onClick) {
+      e.preventDefault();
+      onClick();
+    }
+  };
   const sizeClasses = {
     small: 'h-32 sm:h-40',
     medium: 'h-40 sm:h-56',
@@ -29,6 +37,7 @@ export function CategoryTile({
   return (
     <Link
       to={`/category/${category.slug}`}
+      onClick={handleClick}
       className={cn(
         "group relative overflow-hidden rounded-xl bg-surface-elevated border border-card-border",
         "hover:shadow-large hover:-translate-y-1 transition-all duration-300",
