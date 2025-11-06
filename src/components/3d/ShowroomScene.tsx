@@ -188,17 +188,25 @@ const ShowroomScene = () => {
   return (
     <Canvas 
       shadows
-      camera={{ position: [0, 4, 12], fov: 60 }}
+      gl={{ 
+        antialias: true,
+        alpha: true,
+        powerPreference: "high-performance"
+      }}
+      camera={{ 
+        position: [0, 4, 12], 
+        fov: 60,
+        near: 0.1,
+        far: 1000
+      }}
       style={{ background: 'linear-gradient(to bottom, #e3f2fd, #ffffff)' }}
     >
-      {/* Enhanced Lighting */}
       <ambientLight intensity={0.6} />
       <directionalLight 
         position={[10, 15, 5]} 
         intensity={1} 
         castShadow
-        shadow-mapSize-width={2048}
-        shadow-mapSize-height={2048}
+        shadow-mapSize={[2048, 2048]}
       />
       <spotLight 
         position={[-10, 15, -5]} 
@@ -219,6 +227,10 @@ const ShowroomScene = () => {
         maxDistance={20}
         enableDamping
         dampingFactor={0.05}
+        touches={{
+          ONE: THREE.TOUCH.ROTATE,
+          TWO: THREE.TOUCH.DOLLY_PAN
+        }}
       />
     </Canvas>
   );

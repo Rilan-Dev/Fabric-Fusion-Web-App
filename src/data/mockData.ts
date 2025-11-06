@@ -1,8 +1,498 @@
-// TextTiles Mock Data
-// Comprehensive mock data for development and testing
+// TextTiles Mock Data - AJIO Style
+// Realistic mock data with product images for all categories
 
-import { Category, Product, ProductVariant, ProductImage } from '@/types';
+import { Category, Product } from '@/types';
 
+// Women's Products Mock Data
+export const womenProducts: Product[] = [
+  {
+    id: 'w1',
+    name: 'Banarasi Silk Saree',
+    slug: 'banarasi-silk-saree-red',
+    description: 'Elegant handwoven Banarasi silk saree with traditional motifs',
+    categoryId: '1-1-1',
+    categoryName: 'Silk Sarees',
+    tags: ['silk', 'banarasi', 'traditional'],
+    isActive: true,
+    isFeatured: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    variants: [{
+      id: 'wv1',
+      productId: 'w1',
+      sku: 'BS-RED-001',
+      color: 'Red',
+      colorHex: '#DC143C',
+      price: 8999,
+      compareAtPrice: 14999,
+      costPrice: 6000,
+      stockQuantity: 15,
+      isActive: true,
+      images: [{
+        id: 'wi1',
+        variantId: 'wv1',
+        url: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=800',
+        altText: 'Red Banarasi Saree',
+        sortOrder: 1,
+        isMain: true
+      }]
+    }],
+    minPrice: 8999,
+    maxPrice: 8999,
+    avgRating: 4.8,
+    reviewCount: 156,
+    totalStock: 15
+  },
+  {
+    id: 'w2',
+    name: 'Cotton Kurti Set',
+    slug: 'floral-cotton-kurti',
+    description: 'Comfortable floral printed cotton kurti perfect for daily wear',
+    categoryId: '1-3',
+    categoryName: 'Kurtis',
+    tags: ['cotton', 'kurti', 'daily wear'],
+    isActive: true,
+    isFeatured: false,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    variants: [{
+      id: 'wv2',
+      productId: 'w2',
+      sku: 'CK-BLU-001',
+      color: 'Blue',
+      colorHex: '#4169E1',
+      price: 1299,
+      compareAtPrice: 2199,
+      costPrice: 800,
+      stockQuantity: 45,
+      isActive: true,
+      images: [{
+        id: 'wi2',
+        variantId: 'wv2',
+        url: 'https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=800',
+        altText: 'Floral Kurti',
+        sortOrder: 1,
+        isMain: true
+      }]
+    }],
+    minPrice: 1299,
+    maxPrice: 1299,
+    avgRating: 4.5,
+    reviewCount: 89,
+    totalStock: 45
+  },
+  {
+    id: 'w3',
+    name: 'Designer Salwar Suit',
+    slug: 'anarkali-salwar-suit',
+    description: 'Beautiful Anarkali style salwar suit with embroidery',
+    categoryId: '1-2',
+    categoryName: 'Chudithars & Salwars',
+    tags: ['salwar', 'anarkali', 'party wear'],
+    isActive: true,
+    isFeatured: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    variants: [{
+      id: 'wv3',
+      productId: 'w3',
+      sku: 'SS-PNK-001',
+      color: 'Pink',
+      colorHex: '#FF69B4',
+      price: 3499,
+      compareAtPrice: 5999,
+      costPrice: 2200,
+      stockQuantity: 28,
+      isActive: true,
+      images: [{
+        id: 'wi3',
+        variantId: 'wv3',
+        url: 'https://images.unsplash.com/photo-1585646975848-986d86653f84?w=800',
+        altText: 'Anarkali Suit',
+        sortOrder: 1,
+        isMain: true
+      }]
+    }],
+    minPrice: 3499,
+    maxPrice: 3499,
+    avgRating: 4.7,
+    reviewCount: 124,
+    totalStock: 28
+  }
+];
+
+// Men's Products Mock Data
+export const menProducts: Product[] = [
+  {
+    id: 'm1',
+    name: 'Premium Cotton T-Shirt',
+    slug: 'cotton-round-neck-tshirt',
+    description: 'Soft premium cotton t-shirt with comfortable fit',
+    categoryId: '2-2-2',
+    categoryName: 'Round Neck T-Shirts',
+    tags: ['t-shirt', 'cotton', 'casual'],
+    isActive: true,
+    isFeatured: false,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    variants: [{
+      id: 'mv1',
+      productId: 'm1',
+      sku: 'TS-BLK-M',
+      size: 'M',
+      color: 'Black',
+      colorHex: '#000000',
+      price: 599,
+      compareAtPrice: 999,
+      costPrice: 350,
+      stockQuantity: 120,
+      isActive: true,
+      images: [{
+        id: 'mi1',
+        variantId: 'mv1',
+        url: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800',
+        altText: 'Black T-Shirt',
+        sortOrder: 1,
+        isMain: true
+      }]
+    }],
+    minPrice: 599,
+    maxPrice: 599,
+    avgRating: 4.6,
+    reviewCount: 342,
+    totalStock: 120
+  },
+  {
+    id: 'm2',
+    name: 'Branded Polo Shirt',
+    slug: 'polo-collar-shirt',
+    description: 'Classic polo shirt with brand logo',
+    categoryId: '2-2-1',
+    categoryName: 'Polo T-Shirts',
+    tags: ['polo', 'branded', 'casual'],
+    isActive: true,
+    isFeatured: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    variants: [{
+      id: 'mv2',
+      productId: 'm2',
+      sku: 'PS-NVY-M',
+      size: 'M',
+      color: 'Navy',
+      colorHex: '#000080',
+      price: 1299,
+      compareAtPrice: 2199,
+      costPrice: 800,
+      stockQuantity: 75,
+      isActive: true,
+      images: [{
+        id: 'mi2',
+        variantId: 'mv2',
+        url: 'https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=800',
+        altText: 'Polo Shirt',
+        sortOrder: 1,
+        isMain: true
+      }]
+    }],
+    minPrice: 1299,
+    maxPrice: 1299,
+    avgRating: 4.7,
+    reviewCount: 156,
+    totalStock: 75
+  },
+  {
+    id: 'm3',
+    name: 'Formal Dress Shirt',
+    slug: 'formal-white-shirt',
+    description: 'Professional white dress shirt for office wear',
+    categoryId: '2-1-1',
+    categoryName: 'Formal Shirts',
+    tags: ['shirt', 'formal', 'office wear'],
+    isActive: true,
+    isFeatured: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    variants: [{
+      id: 'mv3',
+      productId: 'm3',
+      sku: 'FS-WHT-M',
+      size: 'M',
+      color: 'White',
+      colorHex: '#FFFFFF',
+      price: 1799,
+      compareAtPrice: 2999,
+      costPrice: 1100,
+      stockQuantity: 95,
+      isActive: true,
+      images: [{
+        id: 'mi3',
+        variantId: 'mv3',
+        url: 'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=800',
+        altText: 'White Formal Shirt',
+        sortOrder: 1,
+        isMain: true
+      }]
+    }],
+    minPrice: 1799,
+    maxPrice: 1799,
+    avgRating: 4.8,
+    reviewCount: 278,
+    totalStock: 95
+  }
+];
+
+// Kids Products Mock Data
+export const kidsProducts: Product[] = [
+  {
+    id: 'k1',
+    name: 'Boys Printed T-Shirt',
+    slug: 'boys-superhero-tshirt',
+    description: 'Fun superhero printed t-shirt for boys',
+    categoryId: '3-1-2',
+    categoryName: 'Boys T-Shirts',
+    tags: ['kids', 'boys', 't-shirt'],
+    isActive: true,
+    isFeatured: false,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    variants: [{
+      id: 'kv1',
+      productId: 'k1',
+      sku: 'BT-BLU-4Y',
+      size: '4-5Y',
+      color: 'Blue',
+      colorHex: '#4169E1',
+      price: 399,
+      compareAtPrice: 699,
+      costPrice: 250,
+      stockQuantity: 85,
+      isActive: true,
+      images: [{
+        id: 'ki1',
+        variantId: 'kv1',
+        url: 'https://images.unsplash.com/photo-1519238263530-99bdd11df2ea?w=800',
+        altText: 'Boys T-Shirt',
+        sortOrder: 1,
+        isMain: true
+      }]
+    }],
+    minPrice: 399,
+    maxPrice: 399,
+    avgRating: 4.7,
+    reviewCount: 145,
+    totalStock: 85
+  },
+  {
+    id: 'k2',
+    name: 'Girls Party Frock',
+    slug: 'girls-floral-frock',
+    description: 'Beautiful floral frock for special occasions',
+    categoryId: '3-2-1',
+    categoryName: 'Girls Frocks',
+    tags: ['kids', 'girls', 'party wear'],
+    isActive: true,
+    isFeatured: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    variants: [{
+      id: 'kv2',
+      productId: 'k2',
+      sku: 'GF-PNK-4Y',
+      size: '4-5Y',
+      color: 'Pink',
+      colorHex: '#FF69B4',
+      price: 899,
+      compareAtPrice: 1499,
+      costPrice: 550,
+      stockQuantity: 62,
+      isActive: true,
+      images: [{
+        id: 'ki2',
+        variantId: 'kv2',
+        url: 'https://images.unsplash.com/photo-1518831959646-742c3a14ebf7?w=800',
+        altText: 'Girls Frock',
+        sortOrder: 1,
+        isMain: true
+      }]
+    }],
+    minPrice: 899,
+    maxPrice: 899,
+    avgRating: 4.8,
+    reviewCount: 198,
+    totalStock: 62
+  },
+  {
+    id: 'k3',
+    name: 'Infant Romper Set',
+    slug: 'baby-cotton-romper',
+    description: 'Soft cotton romper set for infants',
+    categoryId: '3-3',
+    categoryName: 'Infant Wear',
+    tags: ['kids', 'infant', 'romper'],
+    isActive: true,
+    isFeatured: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    variants: [{
+      id: 'kv3',
+      productId: 'k3',
+      sku: 'IR-YEL-3M',
+      size: '3-6M',
+      color: 'Yellow',
+      colorHex: '#FFD700',
+      price: 599,
+      compareAtPrice: 999,
+      costPrice: 380,
+      stockQuantity: 45,
+      isActive: true,
+      images: [{
+        id: 'ki3',
+        variantId: 'kv3',
+        url: 'https://images.unsplash.com/photo-1522771930-78848d9293e8?w=800',
+        altText: 'Baby Romper',
+        sortOrder: 1,
+        isMain: true
+      }]
+    }],
+    minPrice: 599,
+    maxPrice: 599,
+    avgRating: 4.9,
+    reviewCount: 267,
+    totalStock: 45
+  }
+];
+
+// Home Textiles Products Mock Data
+export const homeTextilesProducts: Product[] = [
+  {
+    id: 'h1',
+    name: 'Premium Cotton Bedsheet Set',
+    slug: 'cotton-bedsheet-king',
+    description: 'Luxury cotton bedsheet set with pillow covers',
+    categoryId: '4-1',
+    categoryName: 'Bed Sheets',
+    tags: ['home', 'bedsheet', 'cotton'],
+    isActive: true,
+    isFeatured: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    variants: [{
+      id: 'hv1',
+      productId: 'h1',
+      sku: 'BS-BLU-K',
+      size: 'King',
+      color: 'Blue',
+      colorHex: '#4169E1',
+      price: 2499,
+      compareAtPrice: 3999,
+      costPrice: 1600,
+      stockQuantity: 38,
+      isActive: true,
+      images: [{
+        id: 'hi1',
+        variantId: 'hv1',
+        url: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=800',
+        altText: 'Bedsheet Set',
+        sortOrder: 1,
+        isMain: true
+      }]
+    }],
+    minPrice: 2499,
+    maxPrice: 2499,
+    avgRating: 4.7,
+    reviewCount: 234,
+    totalStock: 38
+  },
+  {
+    id: 'h2',
+    name: 'Blackout Curtains',
+    slug: 'blackout-window-curtains',
+    description: 'Energy saving blackout curtains for bedroom',
+    categoryId: '4-3',
+    categoryName: 'Curtains',
+    tags: ['home', 'curtains', 'blackout'],
+    isActive: true,
+    isFeatured: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    variants: [{
+      id: 'hv2',
+      productId: 'h2',
+      sku: 'CU-GRY-7F',
+      size: '7ft',
+      color: 'Grey',
+      colorHex: '#808080',
+      price: 1899,
+      compareAtPrice: 2999,
+      costPrice: 1200,
+      stockQuantity: 52,
+      isActive: true,
+      images: [{
+        id: 'hi2',
+        variantId: 'hv2',
+        url: 'https://images.unsplash.com/photo-1616627781431-23c3a9b717be?w=800',
+        altText: 'Blackout Curtains',
+        sortOrder: 1,
+        isMain: true
+      }]
+    }],
+    minPrice: 1899,
+    maxPrice: 1899,
+    avgRating: 4.8,
+    reviewCount: 189,
+    totalStock: 52
+  },
+  {
+    id: 'h3',
+    name: 'Decorative Cushion Covers',
+    slug: 'printed-cushion-covers',
+    description: 'Set of 5 printed cushion covers',
+    categoryId: '4-2',
+    categoryName: 'Pillow Covers',
+    tags: ['home', 'cushion', 'decorative'],
+    isActive: true,
+    isFeatured: false,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    variants: [{
+      id: 'hv3',
+      productId: 'h3',
+      sku: 'CC-MLT-16',
+      size: '16x16',
+      color: 'Multi',
+      colorHex: '#FF6347',
+      price: 799,
+      compareAtPrice: 1299,
+      costPrice: 500,
+      stockQuantity: 95,
+      isActive: true,
+      images: [{
+        id: 'hi3',
+        variantId: 'hv3',
+        url: 'https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?w=800',
+        altText: 'Cushion Covers',
+        sortOrder: 1,
+        isMain: true
+      }]
+    }],
+    minPrice: 799,
+    maxPrice: 799,
+    avgRating: 4.5,
+    reviewCount: 156,
+    totalStock: 95
+  }
+];
+
+// All products combined
+export const allProducts: Product[] = [
+  ...womenProducts,
+  ...menProducts,
+  ...kidsProducts,
+  ...homeTextilesProducts
+];
+
+// Categories Data
 export const mockCategories: Category[] = [
   // Women's Section
   {
@@ -126,28 +616,6 @@ export const mockCategories: Category[] = [
         isActive: true,
         productCount: 65,
       },
-      {
-        id: '1-5',
-        name: 'Innerwear',
-        slug: 'women/innerwear',
-        description: 'Quality innerwear essentials',
-        imageUrl: '/images/categories/innerwear-women.jpg',
-        parentId: '1',
-        sortOrder: 5,
-        isActive: true,
-        productCount: 55,
-      },
-      {
-        id: '1-6',
-        name: 'Leggings & Dupattas',
-        slug: 'women/leggings-dupattas',
-        description: 'Essential accessories and bottom wear',
-        imageUrl: '/images/categories/leggings-dupattas.jpg',
-        parentId: '1',
-        sortOrder: 6,
-        isActive: true,
-        productCount: 30,
-      },
     ],
   },
 
@@ -191,15 +659,6 @@ export const mockCategories: Category[] = [
             isActive: true,
             productCount: 35,
           },
-          {
-            id: '2-1-3',
-            name: 'Party Wear Shirts',
-            slug: 'men/shirts/party-wear',
-            parentId: '2-1',
-            sortOrder: 3,
-            isActive: true,
-            productCount: 20,
-          },
         ],
       },
       {
@@ -230,15 +689,6 @@ export const mockCategories: Category[] = [
             sortOrder: 2,
             isActive: true,
             productCount: 30,
-          },
-          {
-            id: '2-2-3',
-            name: 'Printed',
-            slug: 'men/t-shirts/printed',
-            parentId: '2-2',
-            sortOrder: 3,
-            isActive: true,
-            productCount: 20,
           },
         ],
       },
@@ -271,58 +721,7 @@ export const mockCategories: Category[] = [
             isActive: true,
             productCount: 25,
           },
-          {
-            id: '2-3-3',
-            name: 'Casual Trousers',
-            slug: 'men/pants/casual',
-            parentId: '2-3',
-            sortOrder: 3,
-            isActive: true,
-            productCount: 15,
-          },
         ],
-      },
-      {
-        id: '2-4',
-        name: 'Ethnic Wear',
-        slug: 'men/ethnic-wear',
-        description: 'Traditional men\'s wear',
-        imageUrl: '/images/categories/ethnic-men.jpg',
-        parentId: '2',
-        sortOrder: 4,
-        isActive: true,
-        productCount: 45,
-        children: [
-          {
-            id: '2-4-1',
-            name: 'Dhotis / Veshti',
-            slug: 'men/ethnic-wear/dhotis',
-            parentId: '2-4',
-            sortOrder: 1,
-            isActive: true,
-            productCount: 20,
-          },
-          {
-            id: '2-4-2',
-            name: 'Kurta Sets',
-            slug: 'men/ethnic-wear/kurta-sets',
-            parentId: '2-4',
-            sortOrder: 2,
-            isActive: true,
-            productCount: 25,
-          },
-        ],
-      },
-      {
-        id: '2-5',
-        name: 'Innerwear',
-        slug: 'men/innerwear',
-        description: 'Comfortable men\'s innerwear',
-        imageUrl: '/images/categories/innerwear-men.jpg',
-        parentId: '2',
-        sortOrder: 5,
-        isActive: true,
-        productCount: 40,
       },
     ],
   },
@@ -367,24 +766,6 @@ export const mockCategories: Category[] = [
             isActive: true,
             productCount: 40,
           },
-          {
-            id: '3-1-3',
-            name: 'Pants/Shorts',
-            slug: 'kids/boys/pants-shorts',
-            parentId: '3-1',
-            sortOrder: 3,
-            isActive: true,
-            productCount: 30,
-          },
-          {
-            id: '3-1-4',
-            name: 'Ethnic Wear',
-            slug: 'kids/boys/ethnic-wear',
-            parentId: '3-1',
-            sortOrder: 4,
-            isActive: true,
-            productCount: 20,
-          },
         ],
       },
       {
@@ -415,24 +796,6 @@ export const mockCategories: Category[] = [
             sortOrder: 2,
             isActive: true,
             productCount: 40,
-          },
-          {
-            id: '3-2-3',
-            name: 'Party Wear',
-            slug: 'kids/girls/party-wear',
-            parentId: '3-2',
-            sortOrder: 3,
-            isActive: true,
-            productCount: 30,
-          },
-          {
-            id: '3-2-4',
-            name: 'Ethnic Wear',
-            slug: 'kids/girls/ethnic-wear',
-            parentId: '3-2',
-            sortOrder: 4,
-            isActive: true,
-            productCount: 20,
           },
         ],
       },
@@ -503,287 +866,18 @@ export const mockCategories: Category[] = [
         parentId: '4',
         sortOrder: 4,
         isActive: true,
-        productCount: 25,
-      },
-      {
-        id: '4-5',
-        name: 'Blankets',
-        slug: 'home-textiles/blankets',
-        description: 'Warm and cozy blankets',
-        imageUrl: '/images/categories/blankets.jpg',
-        parentId: '4',
-        sortOrder: 5,
-        isActive: true,
-        productCount: 15,
+        productCount: 40,
       },
     ],
   },
 ];
 
-// Sample product images
-const generateProductImages = (baseUrl: string, count: number = 4): ProductImage[] => {
-  return Array.from({ length: count }, (_, index) => ({
-    id: `img-${Math.random().toString(36).substr(2, 9)}`,
-    variantId: `var-${Math.random().toString(36).substr(2, 9)}`,
-    url: `${baseUrl}-${index + 1}.jpg`,
-    altText: `Product image ${index + 1}`,
-    sortOrder: index,
-    isMain: index === 0,
-  }));
-};
-
-// Sample product variants
-const generateProductVariants = (productId: string, colors: string[], sizes: string[]): ProductVariant[] => {
-  const variants: ProductVariant[] = [];
-  
-  colors.forEach((color, colorIndex) => {
-    sizes.forEach((size, sizeIndex) => {
-      const basePrice = 800 + Math.floor(Math.random() * 1200);
-      variants.push({
-        id: `${productId}-var-${colorIndex}-${sizeIndex}`,
-        productId,
-        sku: `SKU-${productId}-${color.toUpperCase()}-${size}`,
-        size,
-        color,
-        colorHex: getColorHex(color),
-        price: basePrice,
-        compareAtPrice: basePrice + Math.floor(Math.random() * 200),
-        stockQuantity: Math.floor(Math.random() * 50) + 5,
-        isActive: true,
-        images: generateProductImages(`/images/products/${productId}/${color.toLowerCase()}`),
-      });
-    });
-  });
-  
-  return variants;
-};
-
-// Helper function to get hex color
-const getColorHex = (colorName: string): string => {
-  const colorMap: Record<string, string> = {
-    red: '#DC2626',
-    blue: '#2563EB',
-    green: '#16A34A',
-    yellow: '#EAB308',
-    purple: '#9333EA',
-    pink: '#EC4899',
-    orange: '#EA580C',
-    black: '#1F2937',
-    white: '#F9FAFB',
-    gray: '#6B7280',
-    brown: '#92400E',
-    navy: '#1E3A8A',
-    maroon: '#7F1D1D',
-    gold: '#D97706',
-    silver: '#9CA3AF',
-  };
-  return colorMap[colorName.toLowerCase()] || '#6B7280';
-};
-
-// Sample products
-export const mockProducts: Product[] = [
-  // Silk Sarees
-  {
-    id: 'silk-saree-1',
-    name: 'Elegant Silk Saree with Golden Border',
-    slug: 'elegant-silk-saree-golden-border',
-    description: 'A beautiful silk saree featuring intricate golden border work, perfect for special occasions and festivals. Crafted with premium silk fabric that drapes elegantly.',
-    shortDescription: 'Elegant silk saree with golden border work',
-    categoryId: '1-1-1',
-    categoryName: 'Silk Sarees',
-    brandName: 'TextTiles Premium',
-    fabricType: 'Pure Silk',
-    careInstructions: 'Dry clean only. Store in a cool, dry place.',
-    tags: ['silk', 'traditional', 'wedding', 'festival', 'elegant'],
-    isActive: true,
-    isFeatured: true,
-    metaTitle: 'Elegant Silk Saree with Golden Border - TextTiles',
-    metaDescription: 'Shop elegant silk saree with golden border work. Premium quality silk fabric perfect for weddings and special occasions.',
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    variants: generateProductVariants('silk-saree-1', ['red', 'blue', 'green', 'maroon'], ['Free Size']),
-    minPrice: 1200,
-    maxPrice: 1800,
-    avgRating: 4.7,
-    reviewCount: 24,
-    totalStock: 45,
-  },
-  
-  {
-    id: 'cotton-saree-1',
-    name: 'Traditional Cotton Saree',
-    slug: 'traditional-cotton-saree',
-    description: 'Comfortable cotton saree perfect for daily wear and casual occasions. Features beautiful traditional prints and soft cotton fabric.',
-    shortDescription: 'Comfortable cotton saree for daily wear',
-    categoryId: '1-1-2',
-    categoryName: 'Cotton Sarees',
-    brandName: 'TextTiles Comfort',
-    fabricType: 'Pure Cotton',
-    careInstructions: 'Machine wash in cold water. Iron when damp.',
-    tags: ['cotton', 'daily wear', 'comfortable', 'traditional'],
-    isActive: true,
-    isFeatured: false,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    variants: generateProductVariants('cotton-saree-1', ['blue', 'green', 'yellow', 'pink'], ['Free Size']),
-    minPrice: 600,
-    maxPrice: 900,
-    avgRating: 4.3,
-    reviewCount: 18,
-    totalStock: 32,
-  },
-
-  // Men's Shirts
-  {
-    id: 'formal-shirt-1',
-    name: 'Premium Formal Shirt',
-    slug: 'premium-formal-shirt',
-    description: 'A sophisticated formal shirt crafted from premium cotton blend fabric. Features classic collar design and perfect fit for professional settings.',
-    shortDescription: 'Premium formal shirt for professional wear',
-    categoryId: '2-1-1',
-    categoryName: 'Formal Shirts',
-    brandName: 'TextTiles Professional',
-    fabricType: 'Cotton Blend',
-    careInstructions: 'Machine wash in warm water. Iron on medium heat.',
-    tags: ['formal', 'professional', 'cotton', 'classic'],
-    isActive: true,
-    isFeatured: true,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    variants: generateProductVariants('formal-shirt-1', ['white', 'blue', 'gray'], ['S', 'M', 'L', 'XL', 'XXL']),
-    minPrice: 800,
-    maxPrice: 1200,
-    avgRating: 4.5,
-    reviewCount: 32,
-    totalStock: 65,
-  },
-
-  // Kids Frocks
-  {
-    id: 'girls-frock-1',
-    name: 'Adorable Girls Party Frock',
-    slug: 'adorable-girls-party-frock',
-    description: 'Beautiful party frock for girls featuring colorful prints and comfortable fit. Perfect for birthday parties and special occasions.',
-    shortDescription: 'Beautiful party frock for girls',
-    categoryId: '3-2-1',
-    categoryName: 'Frocks',
-    brandName: 'TextTiles Kids',
-    fabricType: 'Cotton Blend',
-    careInstructions: 'Machine wash in cold water. Gentle cycle recommended.',
-    tags: ['kids', 'party wear', 'colorful', 'comfortable'],
-    isActive: true,
-    isFeatured: false,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    variants: generateProductVariants('girls-frock-1', ['pink', 'purple', 'yellow'], ['2-3Y', '4-5Y', '6-7Y', '8-9Y']),
-    minPrice: 450,
-    maxPrice: 650,
-    avgRating: 4.6,
-    reviewCount: 15,
-    totalStock: 28,
-  },
-
-  // Home Textiles
-  {
-    id: 'bed-sheet-1',
-    name: 'Luxury Cotton Bed Sheet Set',
-    slug: 'luxury-cotton-bed-sheet-set',
-    description: 'Premium cotton bed sheet set including flat sheet, fitted sheet, and pillowcases. Soft, breathable, and durable fabric for comfortable sleep.',
-    shortDescription: 'Premium cotton bed sheet set',
-    categoryId: '4-1',
-    categoryName: 'Bed Sheets',
-    brandName: 'TextTiles Home',
-    fabricType: 'Premium Cotton',
-    careInstructions: 'Machine wash in warm water. Tumble dry on low heat.',
-    tags: ['bed sheets', 'cotton', 'luxury', 'comfortable'],
-    isActive: true,
-    isFeatured: true,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    variants: generateProductVariants('bed-sheet-1', ['white', 'blue', 'gray', 'beige'], ['Single', 'Double', 'Queen', 'King']),
-    minPrice: 1200,
-    maxPrice: 2000,
-    avgRating: 4.4,
-    reviewCount: 28,
-    totalStock: 40,
-  },
+// Featured products combining all sections
+export const mockFeaturedProducts: Product[] = [
+  womenProducts[0],  // Banarasi Saree
+  menProducts[1],    // Polo Shirt
+  kidsProducts[1],   // Girls Frock
+  homeTextilesProducts[0], // Bedsheet
+  womenProducts[2],  // Salwar Suit
+  menProducts[2],    // Formal Shirt
 ];
-
-// Featured products (subset of mockProducts)
-export const mockFeaturedProducts = mockProducts.filter(product => product.isFeatured);
-
-// Banner data for home page
-export const mockBanners = [
-  {
-    id: '1',
-    title: 'New Silk Collection',
-    subtitle: 'Discover our premium silk sarees',
-    imageUrl: '/images/banners/silk-collection.jpg',
-    actionText: 'Shop Now',
-    actionUrl: '/category/women/sarees/silk',
-  },
-  {
-    id: '2',
-    title: 'Men\'s Formal Wear',
-    subtitle: 'Professional attire for modern men',
-    imageUrl: '/images/banners/men-formal.jpg',
-    actionText: 'Explore',
-    actionUrl: '/category/men/shirts/formal',
-  },
-  {
-    id: '3',
-    title: 'Home Textile Sale',
-    subtitle: 'Up to 40% off on home textiles',
-    imageUrl: '/images/banners/home-sale.jpg',
-    actionText: 'Save Now',
-    actionUrl: '/category/home-textiles',
-  },
-];
-
-// Mock user data
-export const mockUser = {
-  id: 'user-1',
-  fullName: 'Priya Sharma',
-  email: 'priya.sharma@example.com',
-  phoneNumber: '+91 9876543210',
-  role: 'customer' as const,
-  gender: 'female' as const,
-  profilePictureUrl: '/images/avatars/user-1.jpg',
-  loyaltyPoints: 150,
-  isActive: true,
-  createdAt: new Date().toISOString(),
-  updatedAt: new Date().toISOString(),
-};
-
-// Mock cart data
-export const mockCart = {
-  items: [
-    {
-      id: 'cart-item-1',
-      userId: 'user-1',
-      variantId: 'silk-saree-1-var-0-0',
-      quantity: 1,
-      addedAt: new Date().toISOString(),
-      product: mockProducts[0],
-      variant: mockProducts[0].variants[0],
-      subtotal: mockProducts[0].variants[0].price,
-    },
-    {
-      id: 'cart-item-2',
-      userId: 'user-1',
-      variantId: 'formal-shirt-1-var-0-1',
-      quantity: 2,
-      addedAt: new Date().toISOString(),
-      product: mockProducts[2],
-      variant: mockProducts[2].variants[1],
-      subtotal: mockProducts[2].variants[1].price * 2,
-    },
-  ],
-  totalItems: 3,
-  subtotal: 2800,
-  tax: 280,
-  shippingCost: 50,
-  discount: 0,
-  total: 3130,
-  appliedCoupons: [],
-};
