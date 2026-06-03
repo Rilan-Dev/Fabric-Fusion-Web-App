@@ -1,55 +1,83 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, Suspense } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, Html, Text } from '@react-three/drei';
+import {
+  OrbitControls,
+  Html,
+  Text,
+  Float,
+  Sparkles,
+  Environment,
+  ContactShadows,
+  RoundedBox,
+  Torus,
+  Cylinder,
+} from '@react-three/drei';
 import { useNavigate } from 'react-router-dom';
 import * as THREE from 'three';
 
-const Hotspot = ({ 
-  position, 
-  label, 
-  route, 
-  color = "#0F62FE" 
-}: { 
-  position: [number, number, number]; 
-  label: string; 
+/* ------------------------------ Hotspot ------------------------------ */
+const Hotspot = ({
+  position,
+  label,
+  route,
+  color = '#0F62FE',
+}: {
+  position: [number, number, number];
+  label: string;
   route: string;
   color?: string;
 }) => {
   const meshRef = useRef<THREE.Mesh>(null);
+  const ringRef = useRef<THREE.Mesh>(null);
   const [hovered, setHovered] = useState(false);
   const navigate = useNavigate();
 
   useFrame((state) => {
+    const t = state.clock.elapsedTime;
     if (meshRef.current) {
-      meshRef.current.rotation.y = state.clock.elapsedTime;
-      meshRef.current.position.y = position[1] + Math.sin(state.clock.elapsedTime * 2) * 0.1;
+      meshRef.current.rotation.y = t;
+      meshRef.current.position.y = Math.sin(t * 2) * 0.15;
+    }
+    if (ringRef.current) {
+      ringRef.current.rotation.z = t * 0.5;
+      const s = 1 + Math.sin(t * 3) * 0.1;
+      ringRef.current.scale.set(s, s, s);
     }
   });
 
   return (
     <group position={position}>
-      <mesh 
-        ref={meshRef} 
+      <mesh
+        ref={meshRef}
         onClick={() => navigate(route)}
-        onPointerOver={() => setHovered(true)}
-        onPointerOut={() => setHovered(false)}
+        onPointerOver={(e) => {
+          e.stopPropagation();
+          setHovered(true);
+          document.body.style.cursor = 'pointer';
+        }}
+        onPointerOut={() => {
+          setHovered(false);
+          document.body.style.cursor = 'auto';
+        }}
         scale={hovered ? 1.3 : 1}
       >
         <sphereGeometry args={[0.3, 32, 32]} />
-        <meshStandardMaterial 
-          color={color} 
-          emissive={color} 
-          emissiveIntensity={hovered ? 0.8 : 0.5}
-          transparent
-          opacity={0.9}
+        <meshStandardMaterial
+          color={color}
+          emissive={color}
+          emissiveIntensity={hovered ? 1 : 0.6}
         />
       </mesh>
-      <Html center distanceFactor={10}>
-        <div className={`
-          bg-background/95 backdrop-blur px-4 py-2 rounded-lg text-sm font-medium 
-          whitespace-nowrap pointer-events-none border border-primary/20 shadow-lg
-          transition-all duration-200 ${hovered ? 'scale-110' : 'scale-100'}
-        `}>
+      <mesh ref={ringRef} rotation={[Math.PI / 2, 0, 0]}>
+        <torusGeometry args={[0.5, 0.03, 16, 64]} />
+        <meshStandardMaterial color={color} emissive={color} emissiveIntensity={0.7} />
+      </mesh>
+      <Html center distanceFactor={10} style={{ pointerEvents: 'none' }}>
+        <div
+          className={`bg-background/95 backdrop-blur px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap border border-primary/20 shadow-lg transition-all duration-200 ${
+            hovered ? 'scale-110' : 'scale-100'
+          }`}
+        >
           {label}
         </div>
       </Html>
@@ -57,179 +85,280 @@ const Hotspot = ({
   );
 };
 
-const ProductShelf = ({ 
-  position, 
-  color, 
-  label,
-  products = 3
-}: { 
-  position: [number, number, number]; 
+/* ----------------------- Animated Draped Fabric ----------------------- */
+const DrapedFabric = ({
+  position,
+  color,
+  speed = 1,
+}: {
+  position: [number, number, number];
   color: string;
-  label: string;
-  products?: number;
+  speed?: number;
+}) => {
+  const ref = useRef<THREE.Mesh>(null);
+  useFrame((state) => {
+    if (!ref.current) return;
+    const geom = ref.current.geometry as THREE.PlaneGeometry;
+    const pos = geom.attributes.position;
+    const t = state.clock.elapsedTime * speed;
+    for (let i = 0; i < pos.count; i++) {
+      const x = pos.getX(i);
+      const y = pos.getY(i);
+      const z = Math.sin(x * 2 + t) * 0.08 + Math.cos(y * 2 + t) * 0.08;
+      pos.setZ(i, z);
+    }
+    pos.needsUpdate = true;
+    geom.computeVertexNormals();
+  });
+
+  return (
+    <mesh ref={ref} position={position} rotation={[0, 0, 0]}>
+      <planeGeometry args={[1.4, 2.2, 32, 32]} />
+      <meshStandardMaterial
+        color={color}
+        side={THREE.DoubleSide}
+        roughness={0.6}
+        metalness={0.1}
+      />
+    </mesh>
+  );
+};
+
+/* ----------------------------- Mannequin ----------------------------- */
+const Mannequin = ({
+  position,
+  color = '#d8c3a5',
+}: {
+  position: [number, number, number];
+  color?: string;
 }) => {
   return (
     <group position={position}>
-      {/* Shelf base */}
-      <mesh position={[0, -0.5, 0]}>
-        <boxGeometry args={[2, 0.1, 1]} />
-        <meshStandardMaterial color="#8B7355" />
+      {/* base */}
+      <Cylinder args={[0.4, 0.5, 0.1, 32]} position={[0, 0, 0]}>
+        <meshStandardMaterial color="#2b2b2b" metalness={0.5} roughness={0.4} />
+      </Cylinder>
+      {/* pole */}
+      <Cylinder args={[0.05, 0.05, 0.6, 16]} position={[0, 0.35, 0]}>
+        <meshStandardMaterial color="#888" metalness={0.8} roughness={0.2} />
+      </Cylinder>
+      {/* torso */}
+      <mesh position={[0, 1.2, 0]}>
+        <capsuleGeometry args={[0.35, 0.7, 8, 16]} />
+        <meshStandardMaterial color={color} roughness={0.7} />
       </mesh>
-      {/* Product representations */}
-      {Array.from({ length: products }).map((_, i) => (
-        <mesh key={i} position={[-0.6 + i * 0.6, 0, 0]}>
-          <boxGeometry args={[0.4, 0.8, 0.4]} />
-          <meshStandardMaterial color={color} />
-        </mesh>
-      ))}
-      {/* Label */}
-      <Text
-        position={[0, -0.8, 0]}
-        fontSize={0.15}
-        color="#333"
-        anchorX="center"
-        anchorY="middle"
-      >
-        {label}
-      </Text>
+      {/* head */}
+      <mesh position={[0, 2.0, 0]}>
+        <sphereGeometry args={[0.22, 32, 32]} />
+        <meshStandardMaterial color={color} roughness={0.7} />
+      </mesh>
     </group>
   );
 };
 
+/* ------------------------- Section / Booth -------------------------- */
+const Section = ({
+  position,
+  rotation = [0, 0, 0],
+  title,
+  route,
+  primary,
+  secondary,
+  accent,
+}: {
+  position: [number, number, number];
+  rotation?: [number, number, number];
+  title: string;
+  route: string;
+  primary: string;
+  secondary: string;
+  accent: string;
+}) => {
+  return (
+    <group position={position} rotation={rotation}>
+      {/* Booth back wall */}
+      <RoundedBox args={[5, 3.5, 0.15]} radius={0.1} position={[0, 1.5, -1.2]}>
+        <meshStandardMaterial color="#ffffff" roughness={0.8} />
+      </RoundedBox>
+
+      {/* Display rugs / fabric panels */}
+      <DrapedFabric position={[-1.5, 1.6, -1.05]} color={primary} speed={0.8} />
+      <DrapedFabric position={[0, 1.6, -1.05]} color={secondary} speed={1.1} />
+      <DrapedFabric position={[1.5, 1.6, -1.05]} color={accent} speed={0.9} />
+
+      {/* Mannequins on either side */}
+      <Mannequin position={[-1.8, -0.5, 0.2]} color={primary} />
+      <Mannequin position={[1.8, -0.5, 0.2]} color={accent} />
+
+      {/* Floor plate */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.5, 0]} receiveShadow>
+        <circleGeometry args={[2.6, 48]} />
+        <meshStandardMaterial color="#f3eee6" roughness={0.9} />
+      </mesh>
+
+      {/* Title text */}
+      <Text
+        position={[0, 3.3, -1.1]}
+        fontSize={0.32}
+        color="#1a1a1a"
+        anchorX="center"
+        anchorY="middle"
+      >
+        {title}
+      </Text>
+
+      {/* Floating hotspot */}
+      <Float speed={2} rotationIntensity={0.4} floatIntensity={0.6}>
+        <Hotspot position={[0, 2.2, 0.5]} label={title} route={route} color={primary} />
+      </Float>
+
+      <Sparkles count={30} scale={[5, 3, 2]} size={2} speed={0.4} color={primary} />
+    </group>
+  );
+};
+
+/* ------------------------------ Room ------------------------------ */
 const Room = () => {
   return (
     <>
-      {/* Floor with tile pattern */}
+      {/* Floor */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -2, 0]} receiveShadow>
-        <planeGeometry args={[30, 30]} />
-        <meshStandardMaterial 
-          color="#f0f0f0" 
-          roughness={0.8}
-          metalness={0.2}
-        />
+        <planeGeometry args={[40, 40]} />
+        <meshStandardMaterial color="#ece6dc" roughness={0.9} />
       </mesh>
 
-      {/* Back Wall */}
-      <mesh position={[0, 3, -12]} receiveShadow>
-        <planeGeometry args={[30, 10]} />
-        <meshStandardMaterial color="#fafafa" />
+      {/* Ceiling subtle */}
+      <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, 8, 0]}>
+        <planeGeometry args={[40, 40]} />
+        <meshStandardMaterial color="#ffffff" side={THREE.DoubleSide} />
       </mesh>
 
-      {/* Left Wall */}
-      <mesh position={[-15, 3, 0]} rotation={[0, Math.PI / 2, 0]} receiveShadow>
-        <planeGeometry args={[30, 10]} />
-        <meshStandardMaterial color="#fafafa" />
-      </mesh>
-
-      {/* Right Wall */}
-      <mesh position={[15, 3, 0]} rotation={[0, -Math.PI / 2, 0]} receiveShadow>
-        <planeGeometry args={[30, 10]} />
-        <meshStandardMaterial color="#fafafa" />
-      </mesh>
-
-      {/* Women's Section - Left */}
-      <group position={[-6, -1, -6]}>
-        <ProductShelf position={[0, 0, 0]} color="#E91E63" label="Sarees" />
-        <ProductShelf position={[3, 0, 0]} color="#9C27B0" label="Kurtis" />
-        <Hotspot position={[1.5, 2.5, 0]} label="Women's Collection" route="/women" color="#E91E63" />
+      {/* Center pedestal */}
+      <group position={[0, -1.7, 0]}>
+        <Cylinder args={[1.2, 1.4, 0.4, 48]}>
+          <meshStandardMaterial color="#ffffff" metalness={0.2} roughness={0.4} />
+        </Cylinder>
+        <Float speed={1.5} rotationIntensity={0.6} floatIntensity={0.8}>
+          <Torus args={[0.6, 0.15, 24, 64]} position={[0, 1.4, 0]}>
+            <meshStandardMaterial color="#0F62FE" metalness={0.7} roughness={0.2} emissive="#0F62FE" emissiveIntensity={0.3} />
+          </Torus>
+        </Float>
+        <Text
+          position={[0, 0.6, 0]}
+          fontSize={0.35}
+          color="#0F62FE"
+          anchorX="center"
+          anchorY="middle"
+        >
+          TextTiles Showroom
+        </Text>
       </group>
 
-      {/* Men's Section - Right */}
-      <group position={[6, -1, -6]}>
-        <ProductShelf position={[0, 0, 0]} color="#2196F3" label="Shirts" />
-        <ProductShelf position={[-3, 0, 0]} color="#1976D2" label="Pants" />
-        <Hotspot position={[-1.5, 2.5, 0]} label="Men's Collection" route="/men" color="#2196F3" />
-      </group>
+      {/* Four section booths arranged around the room */}
+      <Section
+        position={[-7, 0, -6]}
+        title="Women"
+        route="/women"
+        primary="#E91E63"
+        secondary="#FF80AB"
+        accent="#AD1457"
+      />
+      <Section
+        position={[7, 0, -6]}
+        title="Men"
+        route="/men"
+        primary="#2196F3"
+        secondary="#64B5F6"
+        accent="#1565C0"
+      />
+      <Section
+        position={[-7, 0, 4]}
+        rotation={[0, Math.PI, 0]}
+        title="Kids"
+        route="/kids"
+        primary="#FF9800"
+        secondary="#FFB74D"
+        accent="#F57C00"
+      />
+      <Section
+        position={[7, 0, 4]}
+        rotation={[0, Math.PI, 0]}
+        title="Home Textiles"
+        route="/home-textiles"
+        primary="#4CAF50"
+        secondary="#81C784"
+        accent="#2E7D32"
+      />
 
-      {/* Kids Section - Center Left */}
-      <group position={[-6, -1, 0]}>
-        <ProductShelf position={[0, 0, 0]} color="#FF9800" label="Boys" />
-        <ProductShelf position={[3, 0, 0]} color="#FFC107" label="Girls" />
-        <Hotspot position={[1.5, 2.5, 0]} label="Kids Collection" route="/kids" color="#FF9800" />
-      </group>
+      {/* Hanging lights */}
+      {[-6, 0, 6].map((x) => (
+        <group key={x} position={[x, 6.5, 0]}>
+          <Cylinder args={[0.02, 0.02, 1.5]} position={[0, -0.75, 0]}>
+            <meshStandardMaterial color="#444" />
+          </Cylinder>
+          <mesh position={[0, -1.6, 0]}>
+            <sphereGeometry args={[0.25, 16, 16]} />
+            <meshStandardMaterial
+              color="#fff7d6"
+              emissive="#fff2b8"
+              emissiveIntensity={1.2}
+            />
+          </mesh>
+          <pointLight position={[0, -1.6, 0]} intensity={0.6} color="#fff2b8" distance={10} />
+        </group>
+      ))}
 
-      {/* Home Textiles - Center Right */}
-      <group position={[6, -1, 0]}>
-        <ProductShelf position={[0, 0, 0]} color="#4CAF50" label="Bedding" />
-        <ProductShelf position={[-3, 0, 0]} color="#8BC34A" label="Curtains" />
-        <Hotspot position={[-1.5, 2.5, 0]} label="Home Textiles" route="/home-textiles" color="#4CAF50" />
-      </group>
-
-      {/* Central Display */}
-      <mesh position={[0, 0, -3]} castShadow>
-        <cylinderGeometry args={[1, 1, 0.3, 32]} />
-        <meshStandardMaterial color="#ffffff" />
-      </mesh>
-      <Text
-        position={[0, 0.5, -3]}
-        fontSize={0.3}
-        color="#0F62FE"
-        anchorX="center"
-        anchorY="middle"
-        font="/fonts/inter-bold.woff"
-      >
-        TextTiles
-      </Text>
-
-      {/* Ambient elements */}
-      <mesh position={[-10, 6, -10]}>
-        <sphereGeometry args={[0.5, 16, 16]} />
-        <meshStandardMaterial color="#ffffff" emissive="#ffffff" emissiveIntensity={1} />
-      </mesh>
-      <mesh position={[10, 6, -10]}>
-        <sphereGeometry args={[0.5, 16, 16]} />
-        <meshStandardMaterial color="#ffffff" emissive="#ffffff" emissiveIntensity={1} />
-      </mesh>
+      <ContactShadows position={[0, -1.99, 0]} opacity={0.5} scale={40} blur={2.4} far={6} />
     </>
   );
 };
 
+/* ----------------------------- Loader ----------------------------- */
+const Loader = () => (
+  <Html center>
+    <div className="flex flex-col items-center gap-3 text-sm text-muted-foreground">
+      <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary" />
+      Loading 3D models…
+    </div>
+  </Html>
+);
+
+/* --------------------------- Main Scene --------------------------- */
 const ShowroomScene = () => {
   return (
-    <Canvas 
+    <Canvas
       shadows
-      gl={{ 
-        antialias: true,
-        alpha: true,
-        powerPreference: "high-performance"
-      }}
-      camera={{ 
-        position: [0, 4, 12], 
-        fov: 60,
-        near: 0.1,
-        far: 1000
-      }}
-      style={{ background: 'linear-gradient(to bottom, #e3f2fd, #ffffff)' }}
+      dpr={[1, 2]}
+      gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
+      camera={{ position: [0, 4, 14], fov: 55, near: 0.1, far: 1000 }}
+      style={{ background: 'linear-gradient(to bottom, #e3f2fd 0%, #fafafa 60%, #f5e9d8 100%)' }}
     >
-      <ambientLight intensity={0.6} />
-      <directionalLight 
-        position={[10, 15, 5]} 
-        intensity={1} 
-        castShadow
-        shadow-mapSize={[2048, 2048]}
-      />
-      <spotLight 
-        position={[-10, 15, -5]} 
-        angle={0.3} 
-        penumbra={1} 
-        intensity={0.8}
-        castShadow
-      />
-      <pointLight position={[0, 10, 0]} intensity={0.5} color="#ffffff" />
-      
-      <Room />
-      
+      <Suspense fallback={<Loader />}>
+        <ambientLight intensity={0.55} />
+        <hemisphereLight args={['#ffffff', '#b8a98f', 0.4]} />
+        <directionalLight
+          position={[10, 15, 8]}
+          intensity={1}
+          castShadow
+          shadow-mapSize={[2048, 2048]}
+        />
+        <spotLight position={[-10, 12, -5]} angle={0.4} penumbra={1} intensity={0.7} castShadow />
+
+        <Environment preset="apartment" />
+        <Room />
+      </Suspense>
+
       <OrbitControls
-        enablePan={true}
-        maxPolarAngle={Math.PI / 2.2}
+        enablePan
+        maxPolarAngle={Math.PI / 2.1}
         minPolarAngle={Math.PI / 6}
         minDistance={5}
-        maxDistance={20}
+        maxDistance={24}
         enableDamping
-        dampingFactor={0.05}
+        dampingFactor={0.06}
         touches={{
           ONE: THREE.TOUCH.ROTATE,
-          TWO: THREE.TOUCH.DOLLY_PAN
+          TWO: THREE.TOUCH.DOLLY_PAN,
         }}
       />
     </Canvas>
