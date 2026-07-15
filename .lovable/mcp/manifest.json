@@ -101,6 +101,34 @@
           "$schema": "http://json-schema.org/draft-07/schema#"
         },
         "outputSchema": null
+      },
+      {
+        "name": "check_availability",
+        "title": "Check product availability",
+        "description": "Return real-time availability and inventory status for a product looked up by SKU or product slug. Reports per-variant stock quantity, status (in_stock, low_stock, out_of_stock), price, and an overall total.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": false,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "sku": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Variant SKU, e.g. 'BS-RED-001'. Provide either sku or slug."
+            },
+            "slug": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Product slug, e.g. 'banarasi-silk-saree-red'. Provide either sku or slug."
+            }
+          },
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
       }
     ]
   }

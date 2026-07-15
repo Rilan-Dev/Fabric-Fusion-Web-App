@@ -991,13 +991,110 @@ function findBySlug(list, slug) {
   return null;
 }
 
+// src/lib/mcp/tools/check-availability.ts
+import { defineTool as defineTool4 } from "npm:@lovable.dev/mcp-js@0.22.2";
+import { z as z4 } from "npm:zod@^3.25.76";
+var LOW_STOCK_THRESHOLD = 10;
+function statusFor(qty) {
+  if (qty <= 0) return "out_of_stock";
+  if (qty <= LOW_STOCK_THRESHOLD) return "low_stock";
+  return "in_stock";
+}
+var check_availability_default = defineTool4({
+  name: "check_availability",
+  title: "Check product availability",
+  description: "Return real-time availability and inventory status for a product looked up by SKU or product slug. Reports per-variant stock quantity, status (in_stock, low_stock, out_of_stock), price, and an overall total.",
+  inputSchema: {
+    sku: z4.string().min(1).optional().describe("Variant SKU, e.g. 'BS-RED-001'. Provide either sku or slug."),
+    slug: z4.string().min(1).optional().describe("Product slug, e.g. 'banarasi-silk-saree-red'. Provide either sku or slug.")
+  },
+  annotations: { readOnlyHint: true, idempotentHint: false, openWorldHint: false },
+  handler: ({ sku, slug }) => {
+    if (!sku && !slug) {
+      return {
+        content: [{ type: "text", text: "Provide either 'sku' or 'slug'." }],
+        isError: true
+      };
+    }
+    const checkedAt = (/* @__PURE__ */ new Date()).toISOString();
+    if (sku) {
+      for (const product2 of allProducts) {
+        const variant = product2.variants.find((v) => v.sku === sku);
+        if (variant) {
+          const availability = {
+            sku: variant.sku,
+            variantId: variant.id,
+            size: variant.size,
+            color: variant.color,
+            price: variant.price,
+            compareAtPrice: variant.compareAtPrice,
+            stockQuantity: variant.stockQuantity,
+            status: variant.isActive ? statusFor(variant.stockQuantity) : "out_of_stock",
+            isActive: variant.isActive
+          };
+          const payload2 = {
+            checkedAt,
+            productId: product2.id,
+            productName: product2.name,
+            slug: product2.slug,
+            variants: [availability],
+            totalStock: availability.stockQuantity,
+            overallStatus: availability.status
+          };
+          return {
+            content: [{ type: "text", text: JSON.stringify(payload2, null, 2) }],
+            structuredContent: payload2
+          };
+        }
+      }
+      return {
+        content: [{ type: "text", text: `No variant found with SKU "${sku}".` }],
+        isError: true
+      };
+    }
+    const product = allProducts.find((p) => p.slug === slug);
+    if (!product) {
+      return {
+        content: [{ type: "text", text: `No product found with slug "${slug}".` }],
+        isError: true
+      };
+    }
+    const variants = product.variants.map((v) => ({
+      sku: v.sku,
+      variantId: v.id,
+      size: v.size,
+      color: v.color,
+      price: v.price,
+      compareAtPrice: v.compareAtPrice,
+      stockQuantity: v.stockQuantity,
+      status: v.isActive ? statusFor(v.stockQuantity) : "out_of_stock",
+      isActive: v.isActive
+    }));
+    const totalStock = variants.reduce((sum, v) => sum + Math.max(0, v.stockQuantity), 0);
+    const overallStatus = statusFor(totalStock);
+    const payload = {
+      checkedAt,
+      productId: product.id,
+      productName: product.name,
+      slug: product.slug,
+      variants,
+      totalStock,
+      overallStatus
+    };
+    return {
+      content: [{ type: "text", text: JSON.stringify(payload, null, 2) }],
+      structuredContent: payload
+    };
+  }
+});
+
 // src/lib/mcp/index.ts
 var mcp_default = defineMcp({
   name: "texttiles-mcp",
   title: "TextTiles MCP",
   version: "0.1.0",
-  instructions: "Public tools for the TextTiles digital textile showroom. Use `list_categories` to explore Women/Men/Kids/Home Textiles sections, `search_products` to find items by keyword, and `get_product` to fetch full details by slug. All data is from the public product catalog \u2014 no authentication required.",
-  tools: [search_products_default, get_product_default, list_categories_default]
+  instructions: "Public tools for the TextTiles digital textile showroom. Use `list_categories` to explore Women/Men/Kids/Home Textiles sections, `search_products` to find items by keyword, `get_product` to fetch full details by slug, and `check_availability` to get real-time stock status by SKU or slug. All data is from the public product catalog \u2014 no authentication required.",
+  tools: [search_products_default, get_product_default, list_categories_default, check_availability_default]
 });
 
 // lovable-mcp-supabase-entry.ts
