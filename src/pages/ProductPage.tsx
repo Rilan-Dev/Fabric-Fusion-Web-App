@@ -170,9 +170,9 @@ const ProductPage = () => {
 
             {/* Actions */}
             <div className="flex gap-3 mb-6">
-              <Button onClick={handleAddToCart} className="flex-1" size="lg">
+              <Button onClick={handleAddToCart} className="flex-1" size="lg" disabled={isOutOfStock}>
                 <ShoppingCart className="mr-2 h-5 w-5" />
-                Add to Cart
+                {isOutOfStock ? 'Out of Stock' : 'Add to Cart'}
               </Button>
               <Button variant="outline" size="lg">
                 <Heart className="h-5 w-5" />
@@ -182,7 +182,7 @@ const ProductPage = () => {
               </Button>
             </div>
 
-            <Button onClick={handleBuyNow} variant="secondary" className="w-full" size="lg">
+            <Button onClick={handleBuyNow} variant="secondary" className="w-full" size="lg" disabled={isOutOfStock}>
               Buy Now
             </Button>
 
