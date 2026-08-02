@@ -85,7 +85,7 @@ const ProductPage = () => {
 
             <h1 className="text-3xl md:text-4xl font-bold mb-4">{product.name}</h1>
 
-            <div className="flex items-center gap-4 mb-6">
+            <div className="flex items-center flex-wrap gap-4 mb-3">
               <div className="text-3xl font-bold text-primary">
                 ₹{currentVariant?.price.toLocaleString()}
               </div>
@@ -94,7 +94,26 @@ const ProductPage = () => {
                   ₹{currentVariant.compareAtPrice.toLocaleString()}
                 </div>
               )}
+              <AvailabilityBadge
+                status={stockStatus}
+                stock={stockQuantity}
+                isLoading={availabilityPending}
+                size="md"
+              />
             </div>
+
+            {stockStatus === 'low_stock' && (
+              <p className="text-sm font-medium text-warning mb-6">
+                Only {stockQuantity} left — order soon.
+              </p>
+            )}
+            {isOutOfStock && (
+              <p className="text-sm font-medium text-muted-foreground mb-6">
+                This variant is currently unavailable. Try another size or colour.
+              </p>
+            )}
+            {stockStatus === 'in_stock' && <div className="mb-6" />}
+
 
             <p className="text-muted-foreground mb-6">{product.shortDescription}</p>
 
