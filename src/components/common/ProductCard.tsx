@@ -155,7 +155,7 @@ export function ProductCard({
         {/* Quick Actions Overlay */}
         <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300">
           <div className="flex gap-2">
-            {showQuickAdd && selectedVariant.stockQuantity > 0 && (
+            {showQuickAdd && !isOutOfStock && (
               <Button
                 size="sm"
                 variant="premium"
