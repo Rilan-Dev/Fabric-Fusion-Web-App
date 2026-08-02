@@ -21,6 +21,22 @@ const ProductPage = () => {
   const product = data?.data;
   const currentVariant = product?.variants.find((v) => v.id === selectedVariant) || product?.variants[0];
 
+  // Real-time inventory for the selected variant via the check_availability MCP tool
+  const { data: availability, isPending: availabilityPending } = useAvailability({
+    sku: currentVariant?.sku,
+  });
+  const liveVariant = availability?.variants[0];
+  const fallbackStatus = (currentVariant?.stockQuantity ?? 0) <= 0
+    ? 'out_of_stock'
+    : (currentVariant?.stockQuantity ?? 0) <= 10
+      ? 'low_stock'
+      : 'in_stock';
+  const stockStatus = liveVariant?.status ?? fallbackStatus;
+  const stockQuantity = liveVariant?.stockQuantity ?? currentVariant?.stockQuantity ?? 0;
+  const isOutOfStock = stockStatus === 'out_of_stock';
+
+
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
