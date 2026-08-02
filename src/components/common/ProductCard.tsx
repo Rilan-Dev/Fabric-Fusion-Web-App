@@ -9,6 +9,8 @@ import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { Product, ProductCardProps } from '@/types';
 import { useAddToCart, useToggleWishlist } from '@/hooks/useApi';
+import { useAvailability } from '@/hooks/useAvailability';
+import { AvailabilityBadge } from '@/components/common/AvailabilityBadge';
 
 export function ProductCard({ 
   product, 
