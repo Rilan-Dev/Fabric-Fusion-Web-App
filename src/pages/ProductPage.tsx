@@ -261,15 +261,24 @@ const ProductPage = () => {
       </div>
 
       {/* Mobile Sticky CTA */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-background border-t p-4 flex gap-3">
-        <Button onClick={handleAddToCart} className="flex-1">
-          <ShoppingCart className="mr-2 h-5 w-5" />
-          Add to Cart
-        </Button>
-        <Button onClick={handleBuyNow} variant="secondary" className="flex-1">
-          Buy Now
-        </Button>
+      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-background border-t p-4 space-y-2">
+        <AvailabilityBadge
+          status={stockStatus}
+          stock={stockQuantity}
+          isLoading={availabilityPending}
+          size="sm"
+        />
+        <div className="flex gap-3">
+          <Button onClick={handleAddToCart} className="flex-1" disabled={isOutOfStock}>
+            <ShoppingCart className="mr-2 h-5 w-5" />
+            {isOutOfStock ? 'Out of Stock' : 'Add to Cart'}
+          </Button>
+          <Button onClick={handleBuyNow} variant="secondary" className="flex-1" disabled={isOutOfStock}>
+            Buy Now
+          </Button>
+        </div>
       </div>
+
     </div>
   );
 };
