@@ -157,13 +157,14 @@ const ProductPage = () => {
                   variant="outline"
                   size="sm"
                   onClick={() => setQuantity(quantity + 1)}
-                  disabled={quantity >= (currentVariant?.stockQuantity || 0)}
+                  disabled={quantity >= stockQuantity}
                 >
                   +
                 </Button>
                 <span className="text-sm text-muted-foreground ml-2">
-                  {currentVariant?.stockQuantity} available
+                  {stockQuantity} available
                 </span>
+
               </div>
             </div>
 
