@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useProduct, useAddToCart } from '@/hooks/useApi';
+import { useAvailability } from '@/hooks/useAvailability';
+import { AvailabilityBadge } from '@/components/common/AvailabilityBadge';
 import ProductGallery from '@/components/common/ProductGallery';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -18,6 +20,22 @@ const ProductPage = () => {
 
   const product = data?.data;
   const currentVariant = product?.variants.find((v) => v.id === selectedVariant) || product?.variants[0];
+
+  // Real-time inventory for the selected variant via the check_availability MCP tool
+  const { data: availability, isPending: availabilityPending } = useAvailability({
+    sku: currentVariant?.sku,
+  });
+  const liveVariant = availability?.variants[0];
+  const fallbackStatus = (currentVariant?.stockQuantity ?? 0) <= 0
+    ? 'out_of_stock'
+    : (currentVariant?.stockQuantity ?? 0) <= 10
+      ? 'low_stock'
+      : 'in_stock';
+  const stockStatus = liveVariant?.status ?? fallbackStatus;
+  const stockQuantity = liveVariant?.stockQuantity ?? currentVariant?.stockQuantity ?? 0;
+  const isOutOfStock = stockStatus === 'out_of_stock';
+
+
 
   if (isLoading) {
     return (
@@ -67,7 +85,7 @@ const ProductPage = () => {
 
             <h1 className="text-3xl md:text-4xl font-bold mb-4">{product.name}</h1>
 
-            <div className="flex items-center gap-4 mb-6">
+            <div className="flex items-center flex-wrap gap-4 mb-3">
               <div className="text-3xl font-bold text-primary">
                 ₹{currentVariant?.price.toLocaleString()}
               </div>
@@ -76,7 +94,26 @@ const ProductPage = () => {
                   ₹{currentVariant.compareAtPrice.toLocaleString()}
                 </div>
               )}
+              <AvailabilityBadge
+                status={stockStatus}
+                stock={stockQuantity}
+                isLoading={availabilityPending}
+                size="md"
+              />
             </div>
+
+            {stockStatus === 'low_stock' && (
+              <p className="text-sm font-medium text-warning mb-6">
+                Only {stockQuantity} left — order soon.
+              </p>
+            )}
+            {isOutOfStock && (
+              <p className="text-sm font-medium text-muted-foreground mb-6">
+                This variant is currently unavailable. Try another size or colour.
+              </p>
+            )}
+            {stockStatus === 'in_stock' && <div className="mb-6" />}
+
 
             <p className="text-muted-foreground mb-6">{product.shortDescription}</p>
 
@@ -120,21 +157,22 @@ const ProductPage = () => {
                   variant="outline"
                   size="sm"
                   onClick={() => setQuantity(quantity + 1)}
-                  disabled={quantity >= (currentVariant?.stockQuantity || 0)}
+                  disabled={quantity >= stockQuantity}
                 >
                   +
                 </Button>
                 <span className="text-sm text-muted-foreground ml-2">
-                  {currentVariant?.stockQuantity} available
+                  {stockQuantity} available
                 </span>
+
               </div>
             </div>
 
             {/* Actions */}
             <div className="flex gap-3 mb-6">
-              <Button onClick={handleAddToCart} className="flex-1" size="lg">
+              <Button onClick={handleAddToCart} className="flex-1" size="lg" disabled={isOutOfStock}>
                 <ShoppingCart className="mr-2 h-5 w-5" />
-                Add to Cart
+                {isOutOfStock ? 'Out of Stock' : 'Add to Cart'}
               </Button>
               <Button variant="outline" size="lg">
                 <Heart className="h-5 w-5" />
@@ -144,7 +182,7 @@ const ProductPage = () => {
               </Button>
             </div>
 
-            <Button onClick={handleBuyNow} variant="secondary" className="w-full" size="lg">
+            <Button onClick={handleBuyNow} variant="secondary" className="w-full" size="lg" disabled={isOutOfStock}>
               Buy Now
             </Button>
 
@@ -223,15 +261,24 @@ const ProductPage = () => {
       </div>
 
       {/* Mobile Sticky CTA */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-background border-t p-4 flex gap-3">
-        <Button onClick={handleAddToCart} className="flex-1">
-          <ShoppingCart className="mr-2 h-5 w-5" />
-          Add to Cart
-        </Button>
-        <Button onClick={handleBuyNow} variant="secondary" className="flex-1">
-          Buy Now
-        </Button>
+      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-background border-t p-4 space-y-2">
+        <AvailabilityBadge
+          status={stockStatus}
+          stock={stockQuantity}
+          isLoading={availabilityPending}
+          size="sm"
+        />
+        <div className="flex gap-3">
+          <Button onClick={handleAddToCart} className="flex-1" disabled={isOutOfStock}>
+            <ShoppingCart className="mr-2 h-5 w-5" />
+            {isOutOfStock ? 'Out of Stock' : 'Add to Cart'}
+          </Button>
+          <Button onClick={handleBuyNow} variant="secondary" className="flex-1" disabled={isOutOfStock}>
+            Buy Now
+          </Button>
+        </div>
       </div>
+
     </div>
   );
 };
