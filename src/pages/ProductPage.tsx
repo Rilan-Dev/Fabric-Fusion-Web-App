@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useProduct, useAddToCart } from '@/hooks/useApi';
+import { useAvailability } from '@/hooks/useAvailability';
+import { AvailabilityBadge } from '@/components/common/AvailabilityBadge';
 import ProductGallery from '@/components/common/ProductGallery';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
