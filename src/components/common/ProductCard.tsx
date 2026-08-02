@@ -9,6 +9,8 @@ import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { Product, ProductCardProps } from '@/types';
 import { useAddToCart, useToggleWishlist } from '@/hooks/useApi';
+import { useAvailability } from '@/hooks/useAvailability';
+import { AvailabilityBadge } from '@/components/common/AvailabilityBadge';
 
 export function ProductCard({ 
   product, 
@@ -30,6 +32,20 @@ export function ProductCard({
   const discountPercentage = selectedVariant.compareAtPrice 
     ? Math.round(((selectedVariant.compareAtPrice - selectedVariant.price) / selectedVariant.compareAtPrice) * 100)
     : 0;
+
+  // Real-time stock from the check_availability MCP tool, with a static fallback
+  const { data: availability, isPending: availabilityPending } = useAvailability({ slug: product.slug });
+  const liveVariant = availability?.variants.find((v) => v.sku === selectedVariant.sku);
+  const fallbackStatus =
+    selectedVariant.stockQuantity <= 0
+      ? 'out_of_stock'
+      : selectedVariant.stockQuantity <= 10
+        ? 'low_stock'
+        : 'in_stock';
+  const stockStatus = liveVariant?.status ?? availability?.overallStatus ?? fallbackStatus;
+  const stockQuantity = liveVariant?.stockQuantity ?? selectedVariant.stockQuantity;
+  const isOutOfStock = stockStatus === 'out_of_stock';
+
 
   const handleAddToCart = () => {
     if (onAddToCart) {
@@ -108,16 +124,14 @@ export function ProductCard({
               -{discountPercentage}%
             </Badge>
           )}
-          {selectedVariant.stockQuantity < 5 && selectedVariant.stockQuantity > 0 && (
-            <Badge className="bg-warning text-warning-foreground text-xs font-medium">
-              Low Stock
-            </Badge>
-          )}
-          {selectedVariant.stockQuantity === 0 && (
-            <Badge className="bg-muted text-muted-foreground text-xs font-medium">
-              Out of Stock
-            </Badge>
-          )}
+          <AvailabilityBadge
+            status={stockStatus}
+            stock={stockQuantity}
+            isLoading={availabilityPending}
+            size="sm"
+            className="self-start"
+          />
+
         </div>
 
         {/* Wishlist Button */}
@@ -141,7 +155,7 @@ export function ProductCard({
         {/* Quick Actions Overlay */}
         <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300">
           <div className="flex gap-2">
-            {showQuickAdd && selectedVariant.stockQuantity > 0 && (
+            {showQuickAdd && !isOutOfStock && (
               <Button
                 size="sm"
                 variant="premium"
