@@ -33,6 +33,20 @@ export function ProductCard({
     ? Math.round(((selectedVariant.compareAtPrice - selectedVariant.price) / selectedVariant.compareAtPrice) * 100)
     : 0;
 
+  // Real-time stock from the check_availability MCP tool, with a static fallback
+  const { data: availability, isPending: availabilityPending } = useAvailability({ slug: product.slug });
+  const liveVariant = availability?.variants.find((v) => v.sku === selectedVariant.sku);
+  const fallbackStatus =
+    selectedVariant.stockQuantity <= 0
+      ? 'out_of_stock'
+      : selectedVariant.stockQuantity <= 10
+        ? 'low_stock'
+        : 'in_stock';
+  const stockStatus = liveVariant?.status ?? availability?.overallStatus ?? fallbackStatus;
+  const stockQuantity = liveVariant?.stockQuantity ?? selectedVariant.stockQuantity;
+  const isOutOfStock = stockStatus === 'out_of_stock';
+
+
   const handleAddToCart = () => {
     if (onAddToCart) {
       onAddToCart(selectedVariant.id);
