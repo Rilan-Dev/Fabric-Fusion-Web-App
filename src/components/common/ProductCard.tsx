@@ -124,16 +124,14 @@ export function ProductCard({
               -{discountPercentage}%
             </Badge>
           )}
-          {selectedVariant.stockQuantity < 5 && selectedVariant.stockQuantity > 0 && (
-            <Badge className="bg-warning text-warning-foreground text-xs font-medium">
-              Low Stock
-            </Badge>
-          )}
-          {selectedVariant.stockQuantity === 0 && (
-            <Badge className="bg-muted text-muted-foreground text-xs font-medium">
-              Out of Stock
-            </Badge>
-          )}
+          <AvailabilityBadge
+            status={stockStatus}
+            stock={stockQuantity}
+            isLoading={availabilityPending}
+            size="sm"
+            className="self-start"
+          />
+
         </div>
 
         {/* Wishlist Button */}
